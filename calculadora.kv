@@ -1,32 +1,80 @@
-<CalcButton@Button>:
-    font_size: 18
-<Calculadora>:
-    orientation:"vertical"
-    padding: 15
-    spacing: 15
+Root:
+    CalculadoraScreen:
+    HistoricoScreen:
+
+<CalculadoraScreen>:
+    name: "calc"
+    BoxLayout:
+        orientation:"vertical"
+        padding: 15
+        spacing: 15
         
-    Label:
-        text: root.display
-        color: root.rstd_c
-        font_size:40
-        bold: True
-        padding: [20, 10]
-        halign: "right"
-        valign: "middle"
-        text_size: self.size
+        Button:
+            text: "Historico"
 
-        shorten: True
-        shorten_from: "left"
+            on_press:
+                app.root.current = "hist"
+                app.root.get_screen("hist").abrir()
 
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0.2
-            RoundedRectangle:
-                pos: self.pos
-                size: self.size
-                radius: [20]
-    GridLayout:
-        id: grid_btn
-        cols: 4
-        spacing: 10
-        size_hint_y: 3
+            size_hint_y: None
+            height: 50
+            size_hint_x: None
+            width: 70
+        Label:
+            text: root.display
+            color: root.rstd_c
+            font_size:40
+            bold: True
+            padding: [20, 10]
+            halign: "right"
+            valign: "middle"
+            text_size: self.size
+
+            shorten: True
+            shorten_from: "left"
+
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.2
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+        GridLayout:
+            id: grid_btn
+            cols: 4
+            spacing: 10
+            size_hint_y: 3
+
+<HistoricoScreen>:
+    name: "hist"
+    orientation: "vertical"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint_y: None
+            height:50
+            orientation: "horizontal"
+
+            Button:
+                text: "Voltar"
+                size_hint_y: None
+                height: 50
+                on_press: app.root.current = "calc"
+            Button:
+                text: "Limpar"
+                size_hint_y: None
+                height: 50
+                on_press: root.limpar()
+
+        RecycleView:
+            id: lista
+            viewclass: 'Button'
+            RecycleBoxLayout:
+                default_size: None, 48
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
