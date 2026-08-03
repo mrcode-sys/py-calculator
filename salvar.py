@@ -1,17 +1,20 @@
 import json
-
+from pathlib import Path
 def write(arquivo, text):
     with open(arquivo, 'w') as arquivo:
         json.dump(text, arquivo, indent=4)
 
 def read(arquivo):
-    print(arquivo)
-    with open(arquivo, 'r') as arquivo:
-        try:
-            dados = json.load(arquivo)
-        except json.JSONDecodeError:
-            dados = []
-    return dados
+    if Path(arquivo).is_file():
+        with open(arquivo, 'r') as arquivo:
+            try:
+                dados = json.load(arquivo)
+            except json.JSONDecodeError:
+                dados = []
+        return dados
+    else:
+        write(arquivo, [])
+        return read(arquivo)
 
 def add(arquivo, text):
     arq = read(arquivo)

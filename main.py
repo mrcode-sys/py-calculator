@@ -68,7 +68,7 @@ class CalculadoraScreen(Screen):
         if self.display[-1] in self.operadores and resp == ")":
             return
 
-        if self.display[-1] == "." and resp == ".":
+        if "." in self.display[max(self.display.rfind(op) for op in self.operadores):] and resp == ".":
             return
 
         if len(self.display) == 1 and self.display[0] == "0" and resp == "(":

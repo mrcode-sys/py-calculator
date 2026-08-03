@@ -1,8 +1,6 @@
 operators = ['+','-','x','/']
 
 def calc(num1, ext, num2):
-  print(num1)
-  print(num2)
   match ext:
     case "x":
       return num1 * num2, True
@@ -66,7 +64,6 @@ def resolve_parentheses_form(form):
     internal_init_parenthesis = len(form) - 1 - form[::-1].index("(", len(form) - internal_end_parenthesis)
 
     internal_form = form[internal_init_parenthesis+1:internal_end_parenthesis]
-    print(internal_form)
     value, success = calc_form(internal_form)
     if success == False:
       return value, False
@@ -81,7 +78,6 @@ def convert_to_list(string):
   form = []
 
   for character in string + " ":
-    print(character)
     if character.isnumeric() or character == ".":
       numStr += character
     else:
@@ -101,14 +97,18 @@ def convert_to_list(string):
 
 def core(string):
   to_list_value, success = convert_to_list(string)
+  print(f"Step 1:\nSuccess: {success}\nValue: {to_list_value}")
   if success == False:
     return f"Err{to_list_value}", True
 
   resolved_parentheses_value, success = resolve_parentheses_form(to_list_value)
+  print(f"Step 2:\nSuccess: {success}\nValue: {resolved_parentheses_value}")
   if success == False:
     return f"Err{resolved_parentheses_value}", True
 
   final_result, success = calc_form(resolved_parentheses_value)
+  print(f"Step 3:\nSuccess: {success}\nValue: {final_result}")
+  print(f"Final: {final_result}")
   if success == False:
     return f"Err{final_result}", True
   
