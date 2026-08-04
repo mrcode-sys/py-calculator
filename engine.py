@@ -1,6 +1,18 @@
 operators = ['+','-','x','/']
 
-def calc(num1, ext, num2):
+def calc(num1, ext, num2, percent = False):
+
+  if percent and percent.isnumeric():
+    num_list = [num1, num2]
+    percent-1
+    value1 = num_list[percent]
+    value2 = num_list[percent-1]
+
+    num_list[percent] = value2 / 100 * value1
+
+    num1 = num_list[0]
+    num2 = num_list[1]
+
   match ext:
     case "x":
       return num1 * num2, True
@@ -12,26 +24,74 @@ def calc(num1, ext, num2):
       return num1 + num2, True
     case "-":
       return num1 - num2, True
-    case "%":
-      pass
     case _:
       return 2, False
     
+
+def resolve_percentage(num1, num2, op):
+  print(f"WIOODAWIO{op}")
+  match op:
+    case "+":
+      return num1 + (num2 / 100 * num1)
+    case "-":
+      return num1 - (num2 / 100 * num1)
+    case "x":
+      return (num2 / 100) * num1
+    case "/":
+      return (num2 / num1) * 100
+    case _:
+      return num2 / 100
+
 def calc_form(form):
-  while "x" in form or "/" in form:
-    div_mult_idx = [form.index(op) for op in ["x", "/"] if op in form]
+  while "x" in form or "/" in form or "%" in form:
+    prioritary_op_idx = [form.index(op) for op in ["x", "/", "%"] if op in form]
     
-    if div_mult_idx:
-      fisrt_op = min(div_mult_idx)
-      num1 = form[fisrt_op-1]
-      op = form[fisrt_op]
-      num2 = form[fisrt_op+1]
+    if prioritary_op_idx:
+      first_op = min(prioritary_op_idx)
+
+      if form[first_op] == "%" or form[first_op+2] == "%":
+        if len(form) > first_op + 2 and form[first_op+2] == "%":
+          first_op += 2
+
+        num1 = 100
+        num2 = None
+
+        op_idx = first_op - 2
+        op = form[op_idx] if op_idx >= 0 else None
+
+        print("TESTES:")
+        print(op)
+        print(type(form[first_op - 1]) == int)
+        print(type(form[first_op - 1]) == float)
+        print(first_op -1 >= 0)
+        if first_op -1 >= 0 and isinstance(form[first_op - 1], (int, float)):
+          num2 = form[first_op - 1]
+
+        if first_op -3 >= 0 and isinstance(form[first_op - 3], (int, float)):
+          num1 = form[first_op - 3]
+
+          start_del = first_op - 3
+        else:
+          start_del = first_op - 1
+
+        if num2 == None:
+          return 3, False
+
+        num_percent = resolve_percentage(num1, num2, op)
+
+        del form[start_del:first_op+1]
+        form.insert(start_del, num_percent)
+        continue
+
+      num1 = form[first_op-1]
+      op = form[first_op]
+      num2 = form[first_op+1]
       value, success = calc(num1, op, num2)
       if success == False:
         return value, False
 
-      del form[fisrt_op-1:fisrt_op+2]
-      form.insert(fisrt_op-1, value)
+      del form[first_op-1:first_op+2]
+      form.insert(first_op-1, value)
 
   while any(op in form for op in operators):
 
@@ -51,7 +111,7 @@ def calc_form(form):
             index = 0 
         else:
             index += 1
-
+  print(form)
   if len(form) == 1:
     return form[0], True
   else:
