@@ -102,7 +102,7 @@ class CalculadoraScreen(Screen):
 
                 self.erro = erro_avl
                 
-                self.display = rstd
+                self.display = str(rstd)
                 self.ult_btn = "="
                 return
             else:
